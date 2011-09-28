@@ -1,0 +1,22 @@
+grammar com.soluvas.saentity.Saentity with org.eclipse.xtext.common.Terminals
+
+generate saentity "http://www.soluvas.com/saentity/Saentity"
+
+Model:
+	'(' 'package' packageName=FQN
+	entities+=Entity* ')';
+	
+FQN: ID ('.' ID)*;
+
+Entity:
+	'(' 'entity' name=ID '[' labels+=Label+ ']'
+		'[' attributes+=Attribute* ']'
+	')';
+
+Label: name=ID;
+
+Attribute: name=ID
+	| '(' 'attr' name=ID ( dataType=DataType | '(' dataType='object' dataClass=FQN ')' ) description=STRING? ')'
+;
+
+DataType: 'string' | 'int' | 'decimal' | 'boolean' | 'date' | 'int-array' | 'map' | 'map-array';

@@ -1,0 +1,5 @@
+h1. Saentity
+
+Saentity DSL generates Java classes and Dozer mapping XML from Clojure language-like declarative models.
+
+http://www.soluvas.com/
