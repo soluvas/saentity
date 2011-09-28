@@ -67,11 +67,15 @@ class SaentityJavaClassGenerator implements IGenerator {
 		 * @author ceefour
 		 */
 		public class «entity.name» {
-
+			
+			//PROTECTED REGION ID (custom.methods) START
+			// add your own methods here
+			//PROTECTED REGION END
+			
 			«FOR attribute : entity.attributes»
 			private «dataTypes.get(attribute.name)» «attribute.name.toCamelCaseLower»;
 			«ENDFOR»
-
+			
 			@Override public String toString() {
 				return "«entity.name»(«labelExpr»)";
 			}
