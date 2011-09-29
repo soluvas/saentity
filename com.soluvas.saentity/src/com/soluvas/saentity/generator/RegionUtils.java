@@ -2,16 +2,16 @@ package com.soluvas.saentity.generator;
 
 import java.io.IOException;
 
-import org.eclipse.xtext.util.StringInputStream;
-
 import net.danieldietrich.xtext.bifsa.IBiFileSystemAccess;
 import net.danieldietrich.xtext.generator.protectedregions.IDocument;
-import net.danieldietrich.xtext.generator.protectedregions.IProtectedRegionParser;
-import net.danieldietrich.xtext.generator.protectedregions.ProtectedRegionUtil;
+import net.danieldietrich.xtext.generator.protectedregions.IRegionParser;
+import net.danieldietrich.xtext.generator.protectedregions.RegionUtil;
+
+import org.eclipse.xtext.util.StringInputStream;
 
 public class RegionUtils {
 
-	public static void generateProtectableFile(String fileName, IBiFileSystemAccess bfsa, IProtectedRegionParser parser, String generated) {
+	public static void generateProtectableFile(String fileName, IBiFileSystemAccess bfsa, IRegionParser parser, String generated) {
 		String merged = null;
 		String _protected = null;
 		try {
@@ -23,7 +23,7 @@ public class RegionUtils {
 			try {
 				IDocument protectedDoc = parser.parse(new StringInputStream(_protected));
 				IDocument generatedDoc = parser.parse(new StringInputStream(generated));
-				IDocument mergedDoc = ProtectedRegionUtil.merge(generatedDoc, protectedDoc);
+				IDocument mergedDoc = RegionUtil.merge(generatedDoc, protectedDoc);
 				merged = mergedDoc.getContents();
 			} catch (IOException ex) {
 				throw new RuntimeException(ex);

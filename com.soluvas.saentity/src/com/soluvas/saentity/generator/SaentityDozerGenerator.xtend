@@ -9,10 +9,9 @@ import org.eclipse.xtext.generator.IFileSystemAccess
 import net.danieldietrich.xtext.bifsa.IBiFileSystemAccess
 import com.soluvas.saentity.saentity.Model
 import com.soluvas.saentity.saentity.Entity
-import net.danieldietrich.xtext.generator.protectedregions.ProtectedRegionParserFactory
 import org.eclipse.xtext.util.StringInputStream
-import net.danieldietrich.xtext.generator.protectedregions.ProtectedRegionUtil
 import java.io.IOException
+import net.danieldietrich.xtext.generator.protectedregions.RegionParserFactory
 
 class SaentityDozerGenerator implements IGenerator {
 	
@@ -24,7 +23,7 @@ class SaentityDozerGenerator implements IGenerator {
 		var model = resource.contents.get(0) as Model
 		var generated = renderDozerMapping(model.packageName, model.entities).toString
 		var fileName = model.packageName.toPath + "/" + "mapping.dozer.xml"
-		var parser = ProtectedRegionParserFactory::createDefaultXmlParser()
+		var parser = RegionParserFactory::createDefaultXmlParser()
 		
 		RegionUtils::generateProtectableFile(fileName, bfsa, parser, generated)
 	}

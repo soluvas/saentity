@@ -10,7 +10,7 @@ import net.danieldietrich.xtext.bifsa.IBiFileSystemAccess
 import com.soluvas.saentity.saentity.Model
 import com.soluvas.saentity.saentity.Entity
 import java.util.HashMap
-import net.danieldietrich.xtext.generator.protectedregions.ProtectedRegionParserFactory
+import net.danieldietrich.xtext.generator.protectedregions.RegionParserFactory
 
 class SaentityJavaClassGenerator implements IGenerator {
 	
@@ -20,7 +20,7 @@ class SaentityJavaClassGenerator implements IGenerator {
 		bfsa = fsa as IBiFileSystemAccess
 		var model = resource.contents.get(0) as Model
 		
-		var parser = ProtectedRegionParserFactory::createDefaultJavaParser()
+		var parser = RegionParserFactory::createDefaultJavaParser()
 		for (entity : model.entities) {
 			var generated = renderValueClass(model.packageName, entity).toString
 			var fileName = model.packageName.toPath + "/" + entity.name + ".java"
