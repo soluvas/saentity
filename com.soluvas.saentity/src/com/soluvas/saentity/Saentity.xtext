@@ -20,3 +20,6 @@ Attribute: name=ID
 ;
 
 DataType: 'string' | 'int' | 'decimal' | 'boolean' | 'date' | 'int-array' | 'map' | 'map-array';
+
+// TODO: should be separated into Sarepo DSL, as a set of entity can use multiple repos
+

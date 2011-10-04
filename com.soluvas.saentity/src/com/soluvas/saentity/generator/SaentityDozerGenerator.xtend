@@ -12,20 +12,29 @@ import com.soluvas.saentity.saentity.Entity
 import org.eclipse.xtext.util.StringInputStream
 import java.io.IOException
 import net.danieldietrich.xtext.generator.protectedregions.RegionParserFactory
+import net.danieldietrich.protectedregions.xtext.IBidiFileSystemAccess
+import net.danieldietrich.protectedregions.core.RegionParserFactory
+import net.danieldietrich.protectedregions.xtext.ProtectedRegionSupport
 
 class SaentityDozerGenerator implements IGenerator {
 	
-	IBiFileSystemAccess bfsa
+	IFileSystemAccess regionFsa
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-		bfsa = fsa as IBiFileSystemAccess
-		
+		val bfsa = fsa as IBidiFileSystemAccess
+
+	    regionFsa = new ProtectedRegionSupport$Builder(bfsa)
+	    	.addParser(RegionParserFactory::createJavaParser, ".java")
+	    	.addParser(RegionParserFactory::createXmlParser, ".xml")
+	    	.read("", IFileSystemAccess::DEFAULT_OUTPUT)
+	    	.build
+
 		var model = resource.contents.get(0) as Model
 		var generated = renderDozerMapping(model.packageName, model.entities).toString
 		var fileName = model.packageName.toPath + "/" + "mapping.dozer.xml"
-		var parser = RegionParserFactory::createDefaultXmlParser()
-		
-		RegionUtils::generateProtectableFile(fileName, bfsa, parser, generated)
+//		var parser = RegionParserFactory::createXmlParser
+//		RegionUtils::generateProtectableFile(fileName, bfsa, parser, generated)
+		regionFsa.generateFile(fileName, generated)
 	}
 	
 	def renderDozerMapping(String packageName, Iterable<Entity> entities) {

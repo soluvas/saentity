@@ -17,11 +17,14 @@ Require-Bundle: org.eclipse.xtext;bundle-version="2.0.0";visibility:=reexport,
  org.eclipse.emf.common,
  org.antlr.runtime,
  org.eclipse.xtext.common.types
-Import-Package: org.apache.log4j,
+Import-Package: net.danieldietrich.protectedregions.core,
+ net.danieldietrich.protectedregions.support,
+ net.danieldietrich.protectedregions.xtext,
  org.apache.commons.logging,
+ org.apache.log4j,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtext.xtend2.lib
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: com.soluvas.saentity,
  com.soluvas.saentity.services,
  com.soluvas.saentity.saentity,

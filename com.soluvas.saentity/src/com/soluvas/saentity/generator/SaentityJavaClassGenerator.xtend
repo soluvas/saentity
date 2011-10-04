@@ -11,20 +11,31 @@ import com.soluvas.saentity.saentity.Model
 import com.soluvas.saentity.saentity.Entity
 import java.util.HashMap
 import net.danieldietrich.xtext.generator.protectedregions.RegionParserFactory
+import net.danieldietrich.protectedregions.xtext.IBidiFileSystemAccess
+import net.danieldietrich.protectedregions.xtext.ProtectedRegionSupport
+import net.danieldietrich.protectedregions.core.RegionParserFactory
 
 class SaentityJavaClassGenerator implements IGenerator {
 	
-	IBiFileSystemAccess bfsa
+	IFileSystemAccess regionFsa
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
-		bfsa = fsa as IBiFileSystemAccess
+		val bfsa = fsa as IBidiFileSystemAccess
+
+	    regionFsa = new ProtectedRegionSupport$Builder(bfsa)
+	    	.addParser(RegionParserFactory::createJavaParser, ".java")
+	    	.addParser(RegionParserFactory::createXmlParser, ".xml")
+	    	.read("", IFileSystemAccess::DEFAULT_OUTPUT)
+	    	.build
+
 		var model = resource.contents.get(0) as Model
 		
-		var parser = RegionParserFactory::createDefaultJavaParser()
+//		var parser = RegionParserFactory::createDefaultJavaParser()
 		for (entity : model.entities) {
 			var generated = renderValueClass(model.packageName, entity).toString
 			var fileName = model.packageName.toPath + "/" + entity.name + ".java"
-			RegionUtils::generateProtectableFile(fileName, bfsa, parser, generated)
+//			RegionUtils::generateProtectableFile(fileName, bfsa, parser, generated)
+			regionFsa.generateFile(fileName, generated)
 		}
 	}
 	
