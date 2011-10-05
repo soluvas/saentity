@@ -3,17 +3,54 @@
  */
 package com.soluvas.saentity;
 
+import net.danieldietrich.protectedregions.core.RegionParserFactory;
 import net.danieldietrich.protectedregions.xtext.BidiJavaIoFileSystemAccess;
+import net.danieldietrich.protectedregions.xtext.IBidiFileSystemAccess;
+import net.danieldietrich.protectedregions.xtext.IProtectedRegionSupportFactory;
+import net.danieldietrich.protectedregions.xtext.JavaIoWrapper;
+import net.danieldietrich.protectedregions.xtext.ProtectedRegionSupport;
 
+import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.JavaIoFileSystemAccess;
+
+import com.google.inject.Binder;
+import com.google.inject.Provides;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 public class SaentityRuntimeModule extends com.soluvas.saentity.AbstractSaentityRuntimeModule {
 
-	public Class<? extends JavaIoFileSystemAccess> bindJavaIoFileSystemAccess() {
-		return BidiJavaIoFileSystemAccess.class;
+//	public Class<? extends JavaIoFileSystemAccess> bindJavaIoFileSystemAccess() {
+//		return BidiJavaIoFileSystemAccess.class;
+//	}
+	
+	@Provides
+	public JavaIoFileSystemAccess createJavaIoFileSystemAccess() {
+    	JavaIoFileSystemAccess fsa = new JavaIoWrapper(new IProtectedRegionSupportFactory() {
+			
+			@Override
+			public ProtectedRegionSupport createProtectedRegionSupport(
+					IBidiFileSystemAccess delegate) {
+			    ProtectedRegionSupport prs = new ProtectedRegionSupport.Builder(delegate)
+			    	.addParser(RegionParserFactory.createJavaParser(), ".java")
+			    	.addParser(RegionParserFactory.createXmlParser(), ".xml")
+			    	.read("", IFileSystemAccess.DEFAULT_OUTPUT)
+			    	.build();
+			    return prs;
+			}
+			
+			@Override
+			public IBidiFileSystemAccess createFileSystemAccess() {
+				return new BidiJavaIoFileSystemAccess();
+			}
+		});
+    	return fsa;
 	}
 	
+//	@Override
+//	public void configure(Binder binder) {
+//		super.configure(binder);
+//		binder.bind(JavaIoFileSystemAccess.class).to
+//	}
 }

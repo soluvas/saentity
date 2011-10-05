@@ -20,17 +20,18 @@ import org.slf4j.LoggerFactory
 class SaentityJavaClassGenerator implements IGenerator {
 	
 	Logger logger
-	IFileSystemAccess regionFsa
+	IFileSystemAccess fsa
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 		logger = LoggerFactory::getLogger(^class)
-		val bfsa = fsa as IBidiFileSystemAccess
-
-	    regionFsa = new ProtectedRegionSupport$Builder(bfsa)
-	    	.addParser(RegionParserFactory::createJavaParser, ".java")
-	    	.addParser(RegionParserFactory::createXmlParser, ".xml")
-	    	.read("", IFileSystemAccess::DEFAULT_OUTPUT)
-	    	.build
+		this.fsa = fsa
+//		val bfsa = fsa as IBidiFileSystemAccess
+//
+//	    regionFsa = new ProtectedRegionSupport$Builder(bfsa)
+//	    	.addParser(RegionParserFactory::createJavaParser, ".java")
+//	    	.addParser(RegionParserFactory::createXmlParser, ".xml")
+//	    	.read("", IFileSystemAccess::DEFAULT_OUTPUT)
+//	    	.build
 	    	
 	    for (content : resource.contents) {
 	    	if (content instanceof Model) {
@@ -42,7 +43,7 @@ class SaentityJavaClassGenerator implements IGenerator {
 					var fileName = model.packageName.toPath + "/" + entity.name + ".java"
 		//			RegionUtils::generateProtectableFile(fileName, bfsa, parser, generated)
 					logger.info("Generating {}", fileName)
-					regionFsa.generateFile(fileName, generated)
+					fsa.generateFile(fileName, generated)
 				}
 	    	}
 	    }
@@ -89,13 +90,13 @@ class SaentityJavaClassGenerator implements IGenerator {
 		 */
 		public class «entity.name» {
 			
-			//PROTECTED REGION ID (custom.methods) START
-			// add your own methods here
-			//PROTECTED REGION END
-			
 			«FOR attribute : entity.attributes»
 			private «dataTypes.get(attribute.name)» «attribute.name.toCamelCaseLower»;
 			«ENDFOR»
+			
+			//PROTECTED REGION ID (custom.methods) START
+			// add your own methods here
+			//PROTECTED REGION END
 			
 			@Override public String toString() {
 				return "«entity.name»(«labelExpr»)";

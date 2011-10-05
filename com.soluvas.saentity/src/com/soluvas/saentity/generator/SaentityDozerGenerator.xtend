@@ -20,18 +20,19 @@ import org.slf4j.LoggerFactory
 
 class SaentityDozerGenerator implements IGenerator {
 	
-	IFileSystemAccess regionFsa
+	IFileSystemAccess fsa
 	Logger logger
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
 		logger = LoggerFactory::getLogger(^class)
-		val bfsa = fsa as IBidiFileSystemAccess
-
-	    regionFsa = new ProtectedRegionSupport$Builder(bfsa)
-	    	.addParser(RegionParserFactory::createJavaParser, ".java")
-	    	.addParser(RegionParserFactory::createXmlParser, ".xml")
-	    	.read("", IFileSystemAccess::DEFAULT_OUTPUT)
-	    	.build
+		this.fsa = fsa
+//		val bfsa = fsa as IBidiFileSystemAccess
+//
+//	    regionFsa = new ProtectedRegionSupport$Builder(bfsa)
+//	    	.addParser(RegionParserFactory::createJavaParser, ".java")
+//	    	.addParser(RegionParserFactory::createXmlParser, ".xml")
+//	    	.read("", IFileSystemAccess::DEFAULT_OUTPUT)
+//	    	.build
 
 	    for (content : resource.contents) {
 	    	if (content instanceof Model) {
@@ -41,7 +42,7 @@ class SaentityDozerGenerator implements IGenerator {
 		//		var parser = RegionParserFactory::createXmlParser
 		//		RegionUtils::generateProtectableFile(fileName, bfsa, parser, generated)
 				logger.info("Generating {}", fileName)
-				regionFsa.generateFile(fileName, generated)
+				fsa.generateFile(fileName, generated)
 			}
 		}
 	}
