@@ -14,12 +14,16 @@ import net.danieldietrich.xtext.generator.protectedregions.RegionParserFactory
 import net.danieldietrich.protectedregions.xtext.IBidiFileSystemAccess
 import net.danieldietrich.protectedregions.xtext.ProtectedRegionSupport
 import net.danieldietrich.protectedregions.core.RegionParserFactory
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class SaentityJavaClassGenerator implements IGenerator {
 	
+	Logger logger
 	IFileSystemAccess regionFsa
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
+		logger = LoggerFactory::getLogger(^class)
 		val bfsa = fsa as IBidiFileSystemAccess
 
 	    regionFsa = new ProtectedRegionSupport$Builder(bfsa)
@@ -27,16 +31,22 @@ class SaentityJavaClassGenerator implements IGenerator {
 	    	.addParser(RegionParserFactory::createXmlParser, ".xml")
 	    	.read("", IFileSystemAccess::DEFAULT_OUTPUT)
 	    	.build
+	    	
+	    for (content : resource.contents) {
+	    	if (content instanceof Model) {
+				var model = content as Model
+				
+		//		var parser = RegionParserFactory::createDefaultJavaParser()
+				for (entity : model.entities) {
+					var generated = renderValueClass(model.packageName, entity).toString
+					var fileName = model.packageName.toPath + "/" + entity.name + ".java"
+		//			RegionUtils::generateProtectableFile(fileName, bfsa, parser, generated)
+					logger.info("Generating {}", fileName)
+					regionFsa.generateFile(fileName, generated)
+				}
+	    	}
+	    }
 
-		var model = resource.contents.get(0) as Model
-		
-//		var parser = RegionParserFactory::createDefaultJavaParser()
-		for (entity : model.entities) {
-			var generated = renderValueClass(model.packageName, entity).toString
-			var fileName = model.packageName.toPath + "/" + entity.name + ".java"
-//			RegionUtils::generateProtectableFile(fileName, bfsa, parser, generated)
-			regionFsa.generateFile(fileName, generated)
-		}
 	}
 	
 	def renderValueClass(String packageName, Entity entity) {

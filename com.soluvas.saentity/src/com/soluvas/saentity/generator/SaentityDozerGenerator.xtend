@@ -15,12 +15,16 @@ import net.danieldietrich.xtext.generator.protectedregions.RegionParserFactory
 import net.danieldietrich.protectedregions.xtext.IBidiFileSystemAccess
 import net.danieldietrich.protectedregions.core.RegionParserFactory
 import net.danieldietrich.protectedregions.xtext.ProtectedRegionSupport
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class SaentityDozerGenerator implements IGenerator {
 	
 	IFileSystemAccess regionFsa
+	Logger logger
 	
 	override void doGenerate(Resource resource, IFileSystemAccess fsa) {
+		logger = LoggerFactory::getLogger(^class)
 		val bfsa = fsa as IBidiFileSystemAccess
 
 	    regionFsa = new ProtectedRegionSupport$Builder(bfsa)
@@ -29,12 +33,17 @@ class SaentityDozerGenerator implements IGenerator {
 	    	.read("", IFileSystemAccess::DEFAULT_OUTPUT)
 	    	.build
 
-		var model = resource.contents.get(0) as Model
-		var generated = renderDozerMapping(model.packageName, model.entities).toString
-		var fileName = model.packageName.toPath + "/" + "mapping.dozer.xml"
-//		var parser = RegionParserFactory::createXmlParser
-//		RegionUtils::generateProtectableFile(fileName, bfsa, parser, generated)
-		regionFsa.generateFile(fileName, generated)
+	    for (content : resource.contents) {
+	    	if (content instanceof Model) {
+				var model = content as Model
+				var generated = renderDozerMapping(model.packageName, model.entities).toString
+				var fileName = model.packageName.toPath + "/" + "mapping.dozer.xml"
+		//		var parser = RegionParserFactory::createXmlParser
+		//		RegionUtils::generateProtectableFile(fileName, bfsa, parser, generated)
+				logger.info("Generating {}", fileName)
+				regionFsa.generateFile(fileName, generated)
+			}
+		}
 	}
 	
 	def renderDozerMapping(String packageName, Iterable<Entity> entities) {

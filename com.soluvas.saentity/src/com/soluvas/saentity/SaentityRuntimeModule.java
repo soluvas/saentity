@@ -3,9 +3,17 @@
  */
 package com.soluvas.saentity;
 
+import net.danieldietrich.protectedregions.xtext.BidiJavaIoFileSystemAccess;
+
+import org.eclipse.xtext.generator.JavaIoFileSystemAccess;
+
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 public class SaentityRuntimeModule extends com.soluvas.saentity.AbstractSaentityRuntimeModule {
 
+	public Class<? extends JavaIoFileSystemAccess> bindJavaIoFileSystemAccess() {
+		return BidiJavaIoFileSystemAccess.class;
+	}
+	
 }

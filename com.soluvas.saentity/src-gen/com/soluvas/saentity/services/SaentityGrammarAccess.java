@@ -269,11 +269,13 @@ public class SaentityGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cMapKeyword_6 = (Keyword)cAlternatives.eContents().get(6);
 		private final Keyword cMapArrayKeyword_7 = (Keyword)cAlternatives.eContents().get(7);
 		
+		//// TODO: should be separated into Sarepo DSL, as a set of entity can use multiple repos
 		//DataType:
 		//	"string" | "int" | "decimal" | "boolean" | "date" | "int-array" | "map" | "map-array";
 		public ParserRule getRule() { return rule; }
 
-		//"string" | "int" | "decimal" | "boolean" | "date" | "int-array" | "map" | "map-array"
+		//"string" // TODO: should be separated into Sarepo DSL, as a set of entity can use multiple repos
+		//| "int" | "decimal" | "boolean" | "date" | "int-array" | "map" | "map-array"
 		public Alternatives getAlternatives() { return cAlternatives; }
 
 		//"string"
@@ -297,6 +299,7 @@ public class SaentityGrammarAccess extends AbstractGrammarElementFinder {
 		//"map"
 		public Keyword getMapKeyword_6() { return cMapKeyword_6; }
 
+		//// TODO: should be separated into Sarepo DSL, as a set of entity can use multiple repos
 		//"map-array"
 		public Keyword getMapArrayKeyword_7() { return cMapArrayKeyword_7; }
 	}
@@ -380,6 +383,7 @@ public class SaentityGrammarAccess extends AbstractGrammarElementFinder {
 		return getAttributeAccess().getRule();
 	}
 
+	//// TODO: should be separated into Sarepo DSL, as a set of entity can use multiple repos
 	//DataType:
 	//	"string" | "int" | "decimal" | "boolean" | "date" | "int-array" | "map" | "map-array";
 	public DataTypeElements getDataTypeAccess() {
