@@ -4,16 +4,13 @@
 package com.soluvas.saentity;
 
 import net.danieldietrich.protectedregions.core.RegionParserFactory;
-import net.danieldietrich.protectedregions.xtext.BidiJavaIoFileSystemAccess;
-import net.danieldietrich.protectedregions.xtext.IBidiFileSystemAccess;
-import net.danieldietrich.protectedregions.xtext.IProtectedRegionSupportFactory;
+import net.danieldietrich.protectedregions.xtext.IProtectedRegionSupportConfigurer;
 import net.danieldietrich.protectedregions.xtext.JavaIoWrapper;
 import net.danieldietrich.protectedregions.xtext.ProtectedRegionSupport;
 
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.JavaIoFileSystemAccess;
 
-import com.google.inject.Binder;
 import com.google.inject.Provides;
 
 /**
@@ -27,23 +24,15 @@ public class SaentityRuntimeModule extends com.soluvas.saentity.AbstractSaentity
 	
 	@Provides
 	public JavaIoFileSystemAccess createJavaIoFileSystemAccess() {
-    	JavaIoFileSystemAccess fsa = new JavaIoWrapper(new IProtectedRegionSupportFactory() {
+    	JavaIoFileSystemAccess fsa = new JavaIoWrapper(new IProtectedRegionSupportConfigurer() {
 			
 			@Override
-			public ProtectedRegionSupport createProtectedRegionSupport(
-					IBidiFileSystemAccess delegate) {
-			    ProtectedRegionSupport prs = new ProtectedRegionSupport.Builder(delegate)
-			    	.addParser(RegionParserFactory.createJavaParser(), ".java")
+			public void configure(ProtectedRegionSupport.Builder builder) {
+			    builder.addParser(RegionParserFactory.createJavaParser(), ".java")
 			    	.addParser(RegionParserFactory.createXmlParser(), ".xml")
-			    	.read("", IFileSystemAccess.DEFAULT_OUTPUT)
-			    	.build();
-			    return prs;
+			    	.read("", IFileSystemAccess.DEFAULT_OUTPUT);
 			}
 			
-			@Override
-			public IBidiFileSystemAccess createFileSystemAccess() {
-				return new BidiJavaIoFileSystemAccess();
-			}
 		});
     	return fsa;
 	}
