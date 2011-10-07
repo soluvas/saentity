@@ -29,7 +29,7 @@ public class SaentityRuntimeModule extends com.soluvas.saentity.AbstractSaentity
 			@Override
 			public void configure(ProtectedRegionSupport.Builder builder) {
 			    builder.addParser(RegionParserFactory.createJavaParser(), ".java")
-			    	.addParser(RegionParserFactory.createXmlParser(), ".xml")
+			    	.addParser(RegionParserFactory.createXmlParser(), ".xml", ".xhtml")
 			    	.read("", IFileSystemAccess.DEFAULT_OUTPUT);
 			}
 			

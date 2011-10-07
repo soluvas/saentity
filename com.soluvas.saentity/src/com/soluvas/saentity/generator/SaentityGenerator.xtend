@@ -19,6 +19,8 @@ class SaentityGenerator implements IGenerator {
 		
 		var dozerGenerator = new SaentityDozerGenerator()
 		dozerGenerator.doGenerate(resource, fsa)
+		
+		new SaentityJsfGenerator().doGenerate(resource, fsa)
 	}
 	
 }
