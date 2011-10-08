@@ -4,11 +4,9 @@
 package com.soluvas.saentity;
 
 import net.danieldietrich.protectedregions.core.RegionParserFactory;
-import net.danieldietrich.protectedregions.xtext.IProtectedRegionSupportConfigurer;
-import net.danieldietrich.protectedregions.xtext.JavaIoWrapper;
-import net.danieldietrich.protectedregions.xtext.ProtectedRegionSupport;
+import net.danieldietrich.protectedregions.support.ProtectedRegionSupport;
+import net.danieldietrich.protectedregions.xtext.BidiJavaIoFileSystemAccess;
 
-import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.JavaIoFileSystemAccess;
 
 import com.google.inject.Provides;
@@ -24,16 +22,10 @@ public class SaentityRuntimeModule extends com.soluvas.saentity.AbstractSaentity
 	
 	@Provides
 	public JavaIoFileSystemAccess createJavaIoFileSystemAccess() {
-    	JavaIoFileSystemAccess fsa = new JavaIoWrapper(new IProtectedRegionSupportConfigurer() {
-			
-			@Override
-			public void configure(ProtectedRegionSupport.Builder builder) {
-			    builder.addParser(RegionParserFactory.createJavaParser(), ".java")
-			    	.addParser(RegionParserFactory.createXmlParser(), ".xml", ".xhtml")
-			    	.read("", IFileSystemAccess.DEFAULT_OUTPUT);
-			}
-			
-		});
+		ProtectedRegionSupport prs = new ProtectedRegionSupport();
+		prs.addParser(RegionParserFactory.createJavaParser(), ".java");
+		prs.addParser(RegionParserFactory.createXmlParser(), ".xml", ".xhtml");
+    	JavaIoFileSystemAccess fsa = new BidiJavaIoFileSystemAccess(prs);
     	return fsa;
 	}
 	
