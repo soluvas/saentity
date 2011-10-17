@@ -1,0 +1,16 @@
+(package com.soluvas.sample.ecommerce.catalog
+
+	(entity Product [product_id sku name type price] [
+		(attr product_id int )
+		(attr set int )
+		(attr name string "Product name")
+		(attr type string "Type of product")
+		(attr sku string "Stock-Keeping Unit (SKU)")
+		//(attr categories int-array )
+		//(attr websites int-array )
+		(attr price decimal "Sale price")
+		//(attr status int )
+		//(attr stock (object ProductStock) "Stok produk saat ini" )
+	] )
+
+)
